@@ -115,7 +115,7 @@ describe('Animation Effects', () => {
       expect(confetti).toHaveBeenCalled();
 
       // Verify origin is set for top-right corner
-      const calls = (confetti as ReturnType<typeof vi.fn>).mock.calls;
+      const calls = vi.mocked(confetti).mock.calls;
       expect(calls.length).toBeGreaterThan(0);
     });
 
@@ -123,7 +123,7 @@ describe('Animation Effects', () => {
       fireConfetti(false);
 
       // Should call confetti multiple times for full effect
-      expect((confetti as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThanOrEqual(1);
+      expect(vi.mocked(confetti).mock.calls.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -180,7 +180,7 @@ describe('Animation Effects', () => {
       // Advance timer to trigger interval firings
       vi.advanceTimersByTime(500);
 
-      expect((confetti as ReturnType<typeof vi.fn>).mock.calls.length).toBeGreaterThanOrEqual(1);
+      expect(vi.mocked(confetti).mock.calls.length).toBeGreaterThanOrEqual(1);
     });
   });
 

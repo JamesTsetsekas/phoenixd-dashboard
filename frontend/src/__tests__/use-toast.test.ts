@@ -2,24 +2,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useToast, toast, reducer } from '@/hooks/use-toast';
 
-// Define types for testing
-interface ToasterToast {
-  id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-}
-
-interface State {
-  toasts: ToasterToast[];
-}
-
-type Action =
-  | { type: 'ADD_TOAST'; toast: ToasterToast }
-  | { type: 'UPDATE_TOAST'; toast: Partial<ToasterToast> }
-  | { type: 'DISMISS_TOAST'; toastId?: string }
-  | { type: 'REMOVE_TOAST'; toastId?: string };
+type State = Parameters<typeof reducer>[0];
+type Action = Parameters<typeof reducer>[1];
+type ToasterToast = State['toasts'][number];
 
 describe('Toast Reducer', () => {
   describe('ADD_TOAST action', () => {
@@ -270,7 +255,7 @@ describe('useToast Hook', () => {
   it('should return update function from toast', () => {
     const { result } = renderHook(() => useToast());
 
-    let toastResult: { update: (props: Partial<ToasterToast>) => void };
+    let toastResult: ReturnType<typeof toast>;
 
     act(() => {
       toastResult = result.current.toast({ title: 'Original' });

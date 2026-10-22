@@ -6,7 +6,7 @@ import { useAnimations, ANIMATION_TYPES, type AnimationType } from '@/hooks/use-
 let mockStore: Record<string, string> = {};
 
 const localStorageMock = {
-  getItem: vi.fn((key: string) => mockStore[key] ?? null),
+  getItem: vi.fn((key: string): string | null => mockStore[key] ?? null),
   setItem: vi.fn((key: string, value: string) => {
     mockStore[key] = value;
   }),

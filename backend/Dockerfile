@@ -1,7 +1,9 @@
-FROM node:20-alpine AS base
+FROM node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS base
 
 # Install netcat, curl for health checks, and docker CLI for container management
-RUN apk add --no-cache netcat-openbsd curl docker-cli docker-cli-compose
+RUN apk upgrade --no-cache \
+    && apk add --no-cache ca-certificates netcat-openbsd curl docker-cli docker-cli-compose \
+    && update-ca-certificates
 
 # Install dependencies only when needed
 FROM base AS deps
