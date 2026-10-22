@@ -10,12 +10,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN CYPRESS_INSTALL_BINARY=0 npm ci --cache /tmp/npm-cache && rm -rf /tmp/npm-cache
 
 # Development image
-FROM base AS development
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM deps AS development
 COPY . .
 
 EXPOSE 3000
@@ -26,9 +24,7 @@ ENV HOSTNAME="0.0.0.0"
 CMD ["npm", "run", "dev"]
 
 # Build image
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM deps AS builder
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1

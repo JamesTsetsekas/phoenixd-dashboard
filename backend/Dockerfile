@@ -11,12 +11,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm ci --cache /tmp/npm-cache && rm -rf /tmp/npm-cache
 
 # Development image
-FROM base AS development
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM deps AS development
 COPY . .
 
 # Generate Prisma client
@@ -32,9 +30,7 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["npm", "run", "dev"]
 
 # Build image
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+FROM deps AS builder
 COPY . .
 
 RUN npx prisma generate
